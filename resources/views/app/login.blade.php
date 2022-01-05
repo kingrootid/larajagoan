@@ -87,7 +87,7 @@
                     <div class="mt-5 text-center">
                         <p>© <script>
                                 document.write(new Date().getFullYear())
-                            </script> Minible. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                            </script> {{ env('APP_NAME') }}. Crafted with <i class="fas fa-heart"></i> <a href="{{ url('/') }}" target="_blank" class="text-reset">{{ env('APP_NAME') }}</a></p>
                     </div>
 
                 </div>
