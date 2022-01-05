@@ -21,13 +21,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', [IndexController::class, 'index']);
     Route::get('/warga', [WargaController::class, 'index']);
+    Route::get('/warga/rumah', [WargaController::class, 'rumah']);
 });
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     Route::get('warga', [DataController::class, 'warga']);
     Route::get('warga/{id}', [DataController::class, 'getWarga']);
+    Route::get('rumah', [DataController::class, 'rumah']);
+    Route::get('rumah/{id}', [DataController::class, 'getRumah']);
 });
 Route::group(['prefix' => 'ajax', 'as' => 'ajax.'], function () {
     Route::post('warga', [AjaxController::class, 'warga']);
+    Route::post('rumah', [AjaxController::class, 'rumah']);
 });
 Route::post('login', [AuthController::class, 'authenticate']);
 Route::get('app/login', [AuthController::class, 'login'])->name('login');

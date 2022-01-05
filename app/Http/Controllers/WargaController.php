@@ -16,4 +16,12 @@ class WargaController extends Controller
         ];
         return view('warga.index', $data);
     }
+    public function rumah()
+    {
+        $data = [
+            'page' => 'Management Rumah Warga',
+            'user' => Auth::user(),
+        ];
+        return view('warga.rumah', $data);
+    }
 }
