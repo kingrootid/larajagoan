@@ -54,50 +54,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" name="email">
-                    </div>
-                    <div class="form-group">
-                        <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir">
-                    </div>
-                    <div class="form-group">
-                        <label>Alamat</label>
-                        <textarea class="form-control" name="alamat"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Jenis Kelamin</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="jenis_kelamin" value="L">
-                            <label class="form-check-label">
-                                Laki Laki
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="jenis_kelamin" value="P">
-                            <label class="form-check-label">
-                                Perempuan
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Status Perkawinan</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status_perkawinan" value="Single">
-                            <label class="form-check-label">
-                                Single
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status_perkawinan" value="Menikah">
-                            <label class="form-check-label">
-                                Menikah
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>KTP</label>
-                        <input type="file" class="form-control" name="ktp">
+                        <label>Nomor Rumah</label>
+                        <input type="text" class="form-control" name="nomor">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -306,6 +264,10 @@
                 name: 'kepala_keluarga'
             },
             {
+                data: 'alamat',
+                name: 'alamat'
+            },
+            {
                 data: 'nomor',
                 name: 'nomor'
             },
@@ -325,7 +287,7 @@
         event.preventDefault();
         var form = new FormData(this);
         form.append('_token', token);
-        axios.post("{{url('ajax/warga')}}", form)
+        axios.post("{{url('ajax/rumah')}}", form)
             .then(response => {
                 if (response.data.error == 0) {
                     setTimeout(function() {

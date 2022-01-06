@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 
@@ -55,6 +56,24 @@ class AjaxController extends Controller
                 return ['error' => 0, 'message' => 'Berhasil Hapus Warga'];
             } else {
                 return ['error' => 1, 'message' => 'Gagal Hapus Warga'];
+            }
+        } else {
+            return ['error' => 1, 'message' => 'Action Undefined'];
+        }
+    }
+    public function rumah(Request $request)
+    {
+        if ($request['status'] == "add") {
+            $validateData = $this->validate($request, [
+                'kepala_keluarga' => 'required',
+                'nomor' => 'required',
+                'penghuni' => 'required',
+            ]);
+            $validateData['penghuni'] = json_encode($validateData['penghuni']);
+            if (Rumah::create($validateData)) {
+                return ['error' => 0, 'message' => 'Berhasil Tambah Rumah Baru'];
+            } else {
+                return ['error' => 1, 'message' => 'Gagal Tambah Rumah Baru'];
             }
         } else {
             return ['error' => 1, 'message' => 'Action Undefined'];

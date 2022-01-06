@@ -24,11 +24,24 @@ class DataController extends Controller
     }
     public function rumah()
     {
-        return datatables()->of(Rumah::all())->addIndexColumn()->addColumn('action', function ($row) {
+        return datatables()->of(Rumah::all())->addIndexColumn()->editColumn('kepala_keluarga', function ($row) {
+            return Warga::where('id', $row['kepala_keluarga'])->first()['name'];
+        })->editColumn('penghuni', function ($row) {
+            $data = json_decode($row['penghuni']);
+            $html = '<ul>';
+            foreach ($data as $penghuni) {
+                $dPenghuni = Warga::where('id', $penghuni)->first()['name'];
+                $html .= "<li>$dPenghuni</li>";
+            }
+            $html .= "</ul>";
+            return $html;
+        })->addColumn('alamat', function ($row) {
+            return Warga::where('id', $row['kepala_keluarga'])->first()['alamat'];
+        })->addColumn('action', function ($row) {
             $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
             $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
             return $actionBtn;
-        })->rawColumns(['action'])->make(true);
+        })->rawColumns(['penghuni', 'action', 'alamat'])->make(true);
     }
     public function getWarga($id)
     {
