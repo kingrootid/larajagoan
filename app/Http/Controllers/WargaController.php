@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,17 +22,25 @@ class WargaController extends Controller
     public function rumah()
     {
         $data = [];
-        $notKK = DB::select(DB::raw('SELECT wargas.id, wargas.name FROM wargas LEFT JOIN rumahs ON wargas.id = rumahs.id WHERE rumahs.id IS NULL OR wargas.id IN (rumahs.penghuni)'));
-        print_r($notKK);
-        // for ($i = 0; $i < count($notKK); $i++) {
-        //     echo $notKK[0][$i]['id'];
-        // }
-        // dd($notKK);
-        die();
+        $dataWarga = DB::table('wargas')
+            ->leftJoin('rumahs', 'rumahs.id', '=', 'wargas.id')
+            ->select('wargas.id', 'wargas.name')
+            ->whereNull('rumahs.id')
+            ->get();
+        foreach ($dataWarga as $object) {
+            $dRumah = DB::table('rumahs')
+                ->where('penghuni', 'LIKE', '%"' . $object->id . '"%')
+                ->select('id')
+                ->get()->toArray();
+            if (empty($dRumah)) {
+                array_push($data, (array) $object);
+            }
+        }
         $data = [
             'page' => 'Management Rumah Warga',
             'user' => Auth::user(),
-            'warga' => Warga::all()
+            'warga' => $data,
+            'allWarga' => Warga::all()
         ];
         return view('warga.rumah', $data);
     }

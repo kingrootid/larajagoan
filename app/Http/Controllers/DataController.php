@@ -47,7 +47,10 @@ class DataController extends Controller
     {
         return Warga::where('id', $id)->first();
     }
-    public function getWargaNotKK()
+    public function getRumah($id)
     {
+        $data = Rumah::where('id', $id)->first();
+        $data['penghuni'] = json_decode($data['penghuni']);
+        return $data;
     }
 }

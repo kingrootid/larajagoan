@@ -71,82 +71,37 @@
         <form id="edit" method="POST" enctype="multipart/form-data">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="myLargeModalLabel">Edit Warga</h5>
+                    <h5 class="modal-title h4" id="myLargeModalLabel">Edit Data Rumah</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="edit_id" value="">
                     <input type="hidden" name="status" value="edit">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" id="edit_name" name="name">
+                        <label>Kepala Keluarga</label>
+                        <select class="form-control" id="edit_kepala_keluarga" name="kepala_keluarga">
+                            <option value="null">Pilih Kepala Keluarga</option>
+                            @foreach ($allWarga as $kk)
+                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" id="edit_email" name="email">
+                        <label>Anggota Keluarga</label>
+                        <select class="form-control ps_select2" id="edit_penghuni" multiple name="penghuni[]">
+                            @foreach ($allWarga as $kk)
+                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="edit_tanggal_lahir" name="tanggal_lahir">
-                    </div>
-                    <div class="form-group">
-                        <label>Alamat</label>
-                        <textarea class="form-control" id="edit_alamat" name="alamat"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Jenis Kelamin</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="edit_jenis_kelamin" name="jenis_kelamin" value="L">
-                            <label class="form-check-label">
-                                Laki Laki
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="edit_jenis_kelamin" name="jenis_kelamin" value="P">
-                            <label class="form-check-label">
-                                Perempuan
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Status Perkawinan</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="edit_status_perkawinan" name="status_perkawinan" value="Single">
-                            <label class="form-check-label">
-                                Single
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="edit_status_perkawinan" name="status_perkawinan" value="Menikah">
-                            <label class="form-check-label">
-                                Menikah
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Status Warga</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="edit_status_warga" name="status_warga" value="Sudah Pindah">
-                            <label class="form-check-label">
-                                Sudah Pindah
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="edit_status_warga" name="status_warga" value="Warga">
-                            <label class="form-check-label">
-                                Warga
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>KTP</label>
-                        <input type="file" class="form-control" id="edit_" name="ktp">
-                        <small class="text-danger">*untuk merubah foto ktp silahkan upload ulang ktp, jika tidak tidak perlu upload</small>
+                        <label>Nomor Rumah</label>
+                        <input type="text" class="form-control" id="edit_nomor" name="nomor">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-warning">Edit</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </form>
@@ -157,82 +112,37 @@
         <form id="hapus" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="myLargeModalLabel">Hapus Category</h5>
+                    <h5 class="modal-title h4" id="myLargeModalLabel">Hapus Data Rumah</h5>
                     </button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="hapus_id" value="">
                     <input type="hidden" name="status" value="hapus">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" id="hapus_name" name="name" readonly>
+                        <label>Kepala Keluarga</label>
+                        <select class="form-control" id="hapus_kepala_keluarga" name="kepala_keluarga" disabled>
+                            <option value="null">Pilih Kepala Keluarga</option>
+                            @foreach ($allWarga as $kk)
+                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" id="hapus_email" name="email" readonly>
+                        <label>Anggota Keluarga</label>
+                        <select class="form-control ps_select2" id="hapus_penghuni" multiple name="penghuni[]" disabled>
+                            @foreach ($allWarga as $kk)
+                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="hapus_tanggal_lahir" name="tanggal_lahir" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Alamat</label>
-                        <textarea class="form-control" id="hapus_alamat" name="alamat" disabled></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Jenis Kelamin</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="hapus_jenis_kelamin" name="jenis_kelamin" value="L" disabled>
-                            <label class="form-check-label">
-                                Laki Laki
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="hapus_jenis_kelamin" name="jenis_kelamin" value="P" disabled>
-                            <label class="form-check-label">
-                                Perempuan
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Status Perkawinan</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="hapus_status_perkawinan" name="status_perkawinan" value="Single" disabled>
-                            <label class="form-check-label">
-                                Single
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="hapus_status_perkawinan" name="status_perkawinan" value="Menikah" disabled>
-                            <label class="form-check-label">
-                                Menikah
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Status Warga</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="hapus_status_warga" name="status_warga" value="Sudah Pindah" disabled>
-                            <label class="form-check-label">
-                                Sudah Pindah
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="hapus_status_warga" name="status_warga" value="Warga" disabled>
-                            <label class="form-check-label">
-                                Warga
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>KTP</label>
-                        <input type="file" class="form-control" id="hapus_" name="ktp" disabled>
-                        <small class="text-danger">*untuk merubah foto ktp silahkan upload ulang ktp, jika tidak tidak perlu upload</small>
+                        <label>Nomor Rumah</label>
+                        <input type="text" class="form-control" id="hapus_nomor" name="nomor" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </form>
@@ -248,6 +158,20 @@
     $(".ps_select2").select2({
         dropdownParent: $('.modalAdd'),
         placeholder: 'Pilih Kepala Keluarga terlebih dahulu',
+        multiple: true
+    });
+    $("#edit_kepala_keluarga").select2({
+        dropdownParent: $('.modalEdit')
+    });
+    $("#edit_penghuni").select2({
+        dropdownParent: $('.modalEdit'),
+        multiple: true
+    });
+    $("#hapus_kepala_keluarga").select2({
+        dropdownParent: $('.modalHapus')
+    });
+    $("#hapus_penghuni").select2({
+        dropdownParent: $('.modalHapus'),
         multiple: true
     });
     var token = '{{ csrf_token() }}'
@@ -319,6 +243,7 @@
                 }
             })
             .catch(error => {
+                console.log(error);
                 $(".modalAdd").modal('hide')
                 setTimeout(function() {
                     swal.fire({
@@ -339,16 +264,15 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{{url('data/warga')}}/" + id,
+            url: "{{url('data/rumah')}}/" + id,
             success: function(data) {
                 $("#edit_id").val(data.id);
-                $("#edit_name").val(data.name);
-                $("#edit_email").val(data.email);
-                $("#edit_tanggal_lahir").val(data.tanggal_lahir);
-                $("#edit_alamat").val(data.alamat);
-                $("input[id=edit_jenis_kelamin][value='" + data.jenis_kelamin + "']").prop("checked", true);
-                $("input[id=edit_status_perkawinan][value='" + data.status_perkawinan + "']").prop("checked", true);
-                $("input[id=edit_status_warga][value='" + data.status_warga + "']").prop("checked", true);
+                $("#edit_nomor").val(data.nomor);
+                $("#edit_kepala_keluarga").val(data.kepala_keluarga);
+                $('#edit_kepala_keluarga').trigger('change');
+                $("#edit_penghuni").val(data.penghuni);
+                $('#edit_penghuni').trigger('change');
+
             }
         })
     }
@@ -356,7 +280,7 @@
         event.preventDefault();
         var form = new FormData(this);
         form.append('_token', token);
-        axios.post("{{url('ajax/warga')}}", form)
+        axios.post("{{url('ajax/rumah')}}", form)
             .then(response => {
                 $(".modalEdit").modal('hide');
                 if (response.data.error == 0) {
@@ -409,16 +333,14 @@
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "{{url('data/warga')}}/" + id,
+            url: "{{url('data/rumah')}}/" + id,
             success: function(data) {
                 $("#hapus_id").val(data.id);
-                $("#hapus_name").val(data.name);
-                $("#hapus_email").val(data.email);
-                $("#hapus_tanggal_lahir").val(data.tanggal_lahir);
-                $("#hapus_alamat").val(data.alamat);
-                $("input[id=hapus_jenis_kelamin][value='" + data.jenis_kelamin + "']").prop("checked", true);
-                $("input[id=hapus_status_perkawinan][value='" + data.status_perkawinan + "']").prop("checked", true);
-                $("input[id=hapus_status_warga][value='" + data.status_warga + "']").prop("checked", true);
+                $("#hapus_nomor").val(data.nomor);
+                $("#hapus_kepala_keluarga").val(data.kepala_keluarga);
+                $('#hapus_kepala_keluarga').trigger('change');
+                $("#hapus_penghuni").val(data.penghuni);
+                $('#hapus_penghuni').trigger('change');
             }
         })
     }
@@ -426,7 +348,7 @@
         event.preventDefault();
         var form = new FormData(this);
         form.append('_token', token);
-        axios.post("{{url('ajax/warga')}}", form)
+        axios.post("{{url('ajax/rumah')}}", form)
             .then(response => {
                 $(".modalHapus").modal('hide');
                 if (response.data.error == 0) {

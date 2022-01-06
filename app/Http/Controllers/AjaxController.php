@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AjaxController extends Controller
 {
@@ -65,15 +66,50 @@ class AjaxController extends Controller
     {
         if ($request['status'] == "add") {
             $validateData = $this->validate($request, [
+                'kepala_keluarga' => 'required|unique:rumahs',
+                'nomor' => 'required',
+                'penghuni' => 'required',
+            ]);
+            $validateData['penghuni'] = json_encode($validateData['penghuni']);
+            if (array_search($validateData['kepala_keluarga'], (array) $validateData['penghuni'])) {
+                return ['error' => 1, 'message' => 'Tidak bisa menambahkan kepala keluarga didalam data penghuni'];
+            }
+            if (Rumah::create($validateData)) {
+                return ['error' => 0, 'message' => 'Berhasil Tambah Rumah Baru'];
+            } else {
+                return ['error' => 1, 'message' => 'Gagal Tambah Rumah Baru'];
+            }
+        } else if ($request['status'] == "edit") {
+            $validateData = $this->validate($request, [
                 'kepala_keluarga' => 'required',
                 'nomor' => 'required',
                 'penghuni' => 'required',
             ]);
             $validateData['penghuni'] = json_encode($validateData['penghuni']);
-            if (Rumah::create($validateData)) {
-                return ['error' => 0, 'message' => 'Berhasil Tambah Rumah Baru'];
+            // $searchKK = Rumah::where('kepala_keluarga', $validateData['kepala_keluarga'])->first();
+            foreach (json_decode($validateData['penghuni']) as $checkPenghuni) {
+                $dRumah = DB::table('rumahs')
+                    ->where('penghuni', 'LIKE', '%"' . $checkPenghuni . '"%')
+                    ->where('id', '<>', $request['id'])
+                    ->select('id')
+                    ->get()->toArray();
+                if ($dRumah) {
+                    return ['error' => 1, 'message' => 'Salah satu penghuni sudah masuk dalam salah satu rumah'];
+                }
+            }
+            if (array_search($validateData['kepala_keluarga'], (array) $validateData['penghuni'])) {
+                return ['error' => 1, 'message' => 'Tidak bisa menambahkan kepala keluarga didalam data penghuni'];
+            }
+            if (Rumah::where('id', $request['id'])->update($validateData)) {
+                return ['error' => 0, 'message' => 'Berhasil Edit Data Rumah'];
             } else {
-                return ['error' => 1, 'message' => 'Gagal Tambah Rumah Baru'];
+                return ['error' => 1, 'message' => 'Gagal Edit Data Rumah'];
+            }
+        } else if ($request->status == "hapus") {
+            if (Rumah::where('id', $request->id)->delete()) {
+                return ['error' => 0, 'message' => 'Berhasil Hapus Data Rumah'];
+            } else {
+                return ['error' => 1, 'message' => 'Gagal Hapus Data Rumah'];
             }
         } else {
             return ['error' => 1, 'message' => 'Action Undefined'];

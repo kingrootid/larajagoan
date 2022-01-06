@@ -189,7 +189,7 @@
         <form id="hapus" method="POST">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="myLargeModalLabel">Hapus Category</h5>
+                    <h5 class="modal-title h4" id="myLargeModalLabel">Hapus Warga</h5>
                     </button>
                 </div>
                 <div class="modal-body">

@@ -13,4 +13,8 @@ class Rumah extends Model
         'kepala_keluarga',
         'penghuni'
     ];
+    public function scopeWhereLike($query, $column, $value)
+    {
+        return $query->where($column, 'like', '%' . $value . '%');
+    }
 }
