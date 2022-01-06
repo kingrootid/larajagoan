@@ -1,23 +1,20 @@
 @extends('template')
 @section('view')
+<link href="{{ asset('assets') }}/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 <div class="row">
     <div class="col-12">
         <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target=".modalAdd"><i class="fas fa-plus-square"></i> Tambah Data</button>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Data Warga</h4>
+                <h4 class="card-title">Data Rumah Warga</h4>
                 <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Tanggal Lahir</th>
+                            <th>Nama Kepala Keluarga</th>
                             <th>Alamat</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Status Perkawinan</th>
-                            <th>Status Warga</th>
-                            <th>KTP</th>
+                            <th>Nomor Rumah</th>
+                            <th>Anggota Lain</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -33,15 +30,28 @@
         <form id="add" method="POST" enctype="multipart/form-data">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="myLargeModalLabel">Tambah Warga</h5>
+                    <h5 class="modal-title h4" id="myLargeModalLabel">Tambah Data Rumah</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="status" value="add">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" name="name">
+                        <label>Kepala Keluarga</label>
+                        <select class="form-control kk_select" name="kepala_keluarga">
+                            <option value="null">Pilih Kepala Keluarga</option>
+                            @foreach ($warga as $kk)
+                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Anggota Keluarga</label>
+                        <select class="form-control ps_select2" multiple name="penghuni[]">
+                            @foreach ($warga as $kk)
+                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
@@ -272,47 +282,36 @@
 </div>
 @endsection
 @section('js')
+<script src="{{ asset('assets') }}/libs/select2/js/select2.min.js"></script>
 <script>
+    $(".kk_select").select2({
+        dropdownParent: $('.modalAdd')
+    });
+    $(".ps_select2").select2({
+        dropdownParent: $('.modalAdd'),
+        placeholder: 'Pilih Kepala Keluarga terlebih dahulu',
+        multiple: true
+    });
     var token = '{{ csrf_token() }}'
     var table = $("#datatable").DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ url('/data/warga') }}",
+        ajax: "{{ url('/data/rumah') }}",
         columns: [{
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex'
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'kepala_keluarga',
+                name: 'kepala_keluarga'
             },
             {
-                data: 'email',
-                name: 'email'
+                data: 'nomor',
+                name: 'nomor'
             },
             {
-                data: 'tanggal_lahir',
-                name: 'tanggal_lahir'
-            },
-            {
-                data: 'alamat',
-                name: 'alamat'
-            },
-            {
-                data: 'jenis_kelamin',
-                name: 'jenis_kelamin'
-            },
-            {
-                data: 'status_perkawinan',
-                name: 'status_perkawinan'
-            },
-            {
-                data: 'status_warga',
-                name: 'status_warga'
-            },
-            {
-                data: 'ktp',
-                name: 'ktp'
+                data: 'penghuni',
+                name: 'penghuni'
             },
             {
                 data: 'action',

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     Route::get('warga', [DataController::class, 'warga']);
     Route::get('warga/{id}', [DataController::class, 'getWarga']);
+    Route::post('warga/getWargaNotKK', [DataController::class, 'getWargaNotKK']);
     Route::get('rumah', [DataController::class, 'rumah']);
     Route::get('rumah/{id}', [DataController::class, 'getRumah']);
 });
