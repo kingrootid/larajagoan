@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DataController extends Controller
 {
@@ -51,6 +52,26 @@ class DataController extends Controller
     {
         $data = Rumah::where('id', $id)->first();
         $data['penghuni'] = json_decode($data['penghuni']);
+        return $data;
+    }
+    public function wargaNotKK()
+    {
+        $data = [];
+        $dataWarga = DB::table('wargas')
+            ->leftJoin('rumahs', 'rumahs.kepala_keluarga', '=', 'wargas.id')
+            ->select('wargas.id', 'wargas.name')
+            ->whereNull('rumahs.id')
+            ->get();
+        foreach ($dataWarga as $object) {
+            $dRumah = DB::table('rumahs')
+                ->where('kepala_keluarga', '<>', $object->id)
+                ->where('penghuni', 'LIKE', '%"' . $object->id . '"%')
+                ->select('id')
+                ->get()->toArray();
+            if (empty($dRumah)) {
+                array_push($data, (array) $object);
+            }
+        }
         return $data;
     }
 }

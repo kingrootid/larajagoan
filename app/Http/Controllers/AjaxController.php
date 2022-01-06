@@ -70,41 +70,41 @@ class AjaxController extends Controller
                 'nomor' => 'required',
                 'penghuni' => 'required',
             ]);
-            $validateData['penghuni'] = json_encode($validateData['penghuni']);
-            if (array_search($validateData['kepala_keluarga'], (array) $validateData['penghuni'])) {
-                return ['error' => 1, 'message' => 'Tidak bisa menambahkan kepala keluarga didalam data penghuni'];
+            if (empty(in_array($validateData['kepala_keluarga'], $validateData['penghuni']))) {
+                $validateData['penghuni'] = json_encode($validateData['penghuni']);
+                if (Rumah::create($validateData)) {
+                    return ['error' => 0, 'message' => 'Berhasil Tambah Rumah Baru'];
+                } else {
+                    return ['error' => 1, 'message' => 'Gagal Tambah Rumah Baru'];
+                }
             }
-            if (Rumah::create($validateData)) {
-                return ['error' => 0, 'message' => 'Berhasil Tambah Rumah Baru'];
-            } else {
-                return ['error' => 1, 'message' => 'Gagal Tambah Rumah Baru'];
-            }
+            return ['error' => 1, 'message' => 'Tidak bisa menambahkan kepala keluarga didalam data penghuni'];
         } else if ($request['status'] == "edit") {
             $validateData = $this->validate($request, [
                 'kepala_keluarga' => 'required',
                 'nomor' => 'required',
                 'penghuni' => 'required',
             ]);
-            $validateData['penghuni'] = json_encode($validateData['penghuni']);
-            // $searchKK = Rumah::where('kepala_keluarga', $validateData['kepala_keluarga'])->first();
-            foreach (json_decode($validateData['penghuni']) as $checkPenghuni) {
-                $dRumah = DB::table('rumahs')
-                    ->where('penghuni', 'LIKE', '%"' . $checkPenghuni . '"%')
-                    ->where('id', '<>', $request['id'])
-                    ->select('id')
-                    ->get()->toArray();
-                if ($dRumah) {
-                    return ['error' => 1, 'message' => 'Salah satu penghuni sudah masuk dalam salah satu rumah'];
+            if (empty(in_array($validateData['kepala_keluarga'], $validateData['penghuni']))) {
+                $validateData['penghuni'] = json_encode($validateData['penghuni']);
+                // $searchKK = Rumah::where('kepala_keluarga', $validateData['kepala_keluarga'])->first();
+                foreach (json_decode($validateData['penghuni']) as $checkPenghuni) {
+                    $dRumah = DB::table('rumahs')
+                        ->where('penghuni', 'LIKE', '%"' . $checkPenghuni . '"%')
+                        ->where('id', '<>', $request['id'])
+                        ->select('id')
+                        ->get()->toArray();
+                    if ($dRumah) {
+                        return ['error' => 1, 'message' => 'Salah satu penghuni sudah masuk dalam salah satu rumah'];
+                    }
+                }
+                if (Rumah::where('id', $request['id'])->update($validateData)) {
+                    return ['error' => 0, 'message' => 'Berhasil Edit Data Rumah'];
+                } else {
+                    return ['error' => 1, 'message' => 'Gagal Edit Data Rumah'];
                 }
             }
-            if (array_search($validateData['kepala_keluarga'], (array) $validateData['penghuni'])) {
-                return ['error' => 1, 'message' => 'Tidak bisa menambahkan kepala keluarga didalam data penghuni'];
-            }
-            if (Rumah::where('id', $request['id'])->update($validateData)) {
-                return ['error' => 0, 'message' => 'Berhasil Edit Data Rumah'];
-            } else {
-                return ['error' => 1, 'message' => 'Gagal Edit Data Rumah'];
-            }
+            return ['error' => 1, 'message' => 'Tidak bisa menambahkan kepala keluarga didalam data penghuni'];
         } else if ($request->status == "hapus") {
             if (Rumah::where('id', $request->id)->delete()) {
                 return ['error' => 0, 'message' => 'Berhasil Hapus Data Rumah'];

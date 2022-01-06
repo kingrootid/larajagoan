@@ -40,17 +40,11 @@
                         <label>Kepala Keluarga</label>
                         <select class="form-control kk_select" name="kepala_keluarga">
                             <option value="null">Pilih Kepala Keluarga</option>
-                            @foreach ($warga as $kk)
-                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Anggota Keluarga</label>
                         <select class="form-control ps_select2" multiple name="penghuni[]">
-                            @foreach ($warga as $kk)
-                            <option value="{{ $kk['id'] }}">{{$kk['name']}}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -152,6 +146,22 @@
 @section('js')
 <script src="{{ asset('assets') }}/libs/select2/js/select2.min.js"></script>
 <script>
+    function GetWarga() {
+        $(".kk_select").html()
+        $(".ps_select2").html()
+        $.ajax({
+            type: "GET",
+            url: "{{url('data/wargaNotKK')}}",
+            dataType: "json",
+            success: function(data) {
+                data.forEach(row => {
+                    $(".kk_select").append(`<option value='${row.id}'>${row.name}</option>`);
+                    $(".ps_select2").append(`<option value='${row.id}'>${row.name}</option>`);
+                })
+            },
+        });
+    }
+    GetWarga()
     $(".kk_select").select2({
         dropdownParent: $('.modalAdd')
     });
@@ -224,6 +234,7 @@
                                 confirmButton: 'btn font-weight-bold btn-primary',
                             },
                         }).then(function() {
+                            GetWarga()
                             $(".modalAdd").modal('hide');
                             table.ajax.reload();
                         });
