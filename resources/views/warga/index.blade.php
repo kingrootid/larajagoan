@@ -339,6 +339,7 @@
                                 confirmButton: 'btn font-weight-bold btn-primary',
                             },
                         }).then(function() {
+                            $("#add").trigger("reset")
                             $(".modalAdd").modal('hide');
                             table.ajax.reload();
                         });

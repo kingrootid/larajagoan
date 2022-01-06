@@ -28,7 +28,7 @@ class DataController extends Controller
             return Warga::where('id', $row['kepala_keluarga'])->first()['name'];
         })->editColumn('penghuni', function ($row) {
             $data = json_decode($row['penghuni']);
-            $html = '<ul>';
+            $html = '<ul style="list-style: none;">';
             foreach ($data as $penghuni) {
                 $dPenghuni = Warga::where('id', $penghuni)->first()['name'];
                 $html .= "<li>$dPenghuni</li>";
