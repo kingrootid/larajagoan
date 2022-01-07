@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Iuran;
 use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
@@ -72,6 +73,23 @@ class DataController extends Controller
                 array_push($data, (array) $object);
             }
         }
+        return $data;
+    }
+    public function iuran_warga()
+    {
+        return datatables()->of(Iuran::all())->addIndexColumn()->editColumn('rumah_id', function ($row) {
+            $rumah = Rumah::where('id', $row['rumah_id'])->first();
+            $kk = Warga::where('id', $rumah['kepala_keluarga'])->first();
+            return $kk['name'];
+        })->addColumn('action', function ($row) {
+            $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
+            return $actionBtn;
+        })->rawColumns(['action', 'rumah_id'])->make(true);
+    }
+    public function getiuran_warga($id)
+    {
+        $data = Iuran::where('id', $id)->first();
         return $data;
     }
 }

@@ -137,7 +137,7 @@
                         </li>
                         <li class="menu-title">Iuran</li>
                         <li>
-                            <a href="{{ url('/iuran/bulan') }}">
+                            <a href="{{ url('/iuran/warga') }}">
                                 <i class="fas fa-money-bill"></i>
                                 <span>Bulanan Warga</span>
                             </a>

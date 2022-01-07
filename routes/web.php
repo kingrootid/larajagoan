@@ -4,6 +4,7 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\IuranController;
 use App\Http\Controllers\WargaController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,17 +23,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [IndexController::class, 'index']);
     Route::get('/warga', [WargaController::class, 'index']);
     Route::get('/warga/rumah', [WargaController::class, 'rumah']);
+    Route::get('/iuran/warga', [IuranController::class, 'index']);
+    Route::get('/iuran/pengeluaran', [IuranController::class, 'pengeluaran']);
 });
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     Route::get('warga', [DataController::class, 'warga']);
     Route::get('warga/{id}', [DataController::class, 'getWarga']);
     Route::get('rumah', [DataController::class, 'rumah']);
     Route::get('rumah/{id}', [DataController::class, 'getRumah']);
+    Route::get('iuran/warga', [DataController::class, 'iuran_warga']);
+    Route::get('iuran/warga/{id}', [DataController::class, 'getiuran_warga']);
     Route::get('wargaNotKK', [DataController::class, 'wargaNotKK']);
 });
 Route::group(['prefix' => 'ajax', 'as' => 'ajax.'], function () {
     Route::post('warga', [AjaxController::class, 'warga']);
     Route::post('rumah', [AjaxController::class, 'rumah']);
+    Route::post('iuran/warga', [AjaxController::class, 'iuran_warga']);
 });
 Route::post('login', [AuthController::class, 'authenticate']);
 Route::get('app/login', [AuthController::class, 'login'])->name('login');

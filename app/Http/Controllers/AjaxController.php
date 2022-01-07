@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Iuran;
+use App\Models\Kas;
 use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
@@ -110,6 +112,94 @@ class AjaxController extends Controller
                 return ['error' => 0, 'message' => 'Berhasil Hapus Data Rumah'];
             } else {
                 return ['error' => 1, 'message' => 'Gagal Hapus Data Rumah'];
+            }
+        } else {
+            return ['error' => 1, 'message' => 'Action Undefined'];
+        }
+    }
+    public function iuran_warga(Request $request)
+    {
+        if ($request['status'] == "add") {
+            $validateData = $this->validate($request, [
+                'rumah_id' => 'required',
+                'jumlah' => 'required',
+                'periode' => 'required',
+            ]);
+            try {
+                DB::beginTransaction();
+                $rumah = DB::table('wargas')
+                    ->Join('rumahs', 'rumahs.kepala_keluarga', '=', 'wargas.id')
+                    ->where('rumahs.id', '=', $validateData['rumah_id'])
+                    ->select('rumahs.id', 'wargas.name', 'wargas.alamat', 'rumahs.nomor')
+                    ->first();
+                $iuran = Iuran::create($validateData);
+                $insertKas = [
+                    'type' => 'Pemasukan',
+                    'deskripsi' => 'Pembayaran Iuran Bulanan Periode ' . $validateData['periode'] . ' Rumah Keluarga Bpk/Ibu : ' . $rumah->name,
+                    'saldo' => $validateData['jumlah']
+                ];
+                $kas = Kas::create($insertKas);
+                if ($kas && $iuran) {
+                    DB::commit();
+                    return ['error' => 0, 'message' => 'Berhasil Tambah Iuran Warga'];
+                } else {
+                    return ['error' => 1, 'message' => 'Gagal Tambah Iuran Warga'];
+                    DB::rollback();
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+                return ['error' => 1, 'message' => 'Gagal Tambah Iuran Warga', 'errorMessage' => $e];
+            }
+        } else if ($request['status'] == "edit") {
+            $oldData = Iuran::where('id', $request['id'])->first();
+            $validateData = $this->validate($request, [
+                'rumah_id' => 'required',
+                'jumlah' => 'required',
+                'periode' => 'required',
+            ]);
+            try {
+                DB::beginTransaction();
+                $rumah = DB::table('wargas')
+                    ->Join('rumahs', 'rumahs.kepala_keluarga', '=', 'wargas.id')
+                    ->where('rumahs.id', '=', $validateData['rumah_id'])
+                    ->select('rumahs.id', 'wargas.name', 'wargas.alamat', 'rumahs.nomor')
+                    ->first();
+                $getKas = Kas::where('type', 'Pemasukan')->where('deskripsi', 'LIKE', '%' . $oldData->periode . '%')->where('saldo', $oldData->jumlah)->first();
+                $iuran = Iuran::where('id', $request['id'])->update($validateData);
+                $insertKas = [
+                    'type' => 'Pemasukan',
+                    'deskripsi' => 'Pembayaran Iuran Bulanan Periode ' . $validateData['periode'] . ' Rumah Keluarga Bpk/Ibu : ' . $rumah->name,
+                    'saldo' => $validateData['jumlah']
+                ];
+                $kas = Kas::where('id', $getKas->id)->update($insertKas);
+                if ($kas && $iuran) {
+                    DB::commit();
+                    return ['error' => 0, 'message' => 'Berhasil Edit Iuran Warga'];
+                } else {
+                    return ['error' => 1, 'message' => 'Gagal Edit Iuran Warga'];
+                    DB::rollback();
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+                return ['error' => 1, 'message' => 'Gagal Edit Iuran Warga', 'errorMessage' => $e];
+            }
+        } else if ($request['status'] == "hapus") {
+            $oldData = Iuran::where('id', $request['id'])->first();
+            try {
+                DB::beginTransaction();
+                $getKas = Kas::where('type', 'Pemasukan')->where('deskripsi', 'LIKE', '%' . $oldData->periode . '%')->where('saldo', $oldData->jumlah)->first();
+                $iuran = Iuran::where('id', $request['id'])->delete();
+                $kas = Kas::where('id', $getKas->id)->delete();
+                if ($kas && $iuran) {
+                    DB::commit();
+                    return ['error' => 0, 'message' => 'Berhasil Hapus Iuran Warga'];
+                } else {
+                    return ['error' => 1, 'message' => 'Gagal Hapus Iuran Warga'];
+                    DB::rollback();
+                }
+            } catch (\Exception $e) {
+                DB::rollback();
+                return ['error' => 1, 'message' => 'Gagal Hapus Iuran Warga', 'errorMessage' => $e];
             }
         } else {
             return ['error' => 1, 'message' => 'Action Undefined'];
