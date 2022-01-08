@@ -6,7 +6,18 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
-
+## Installation
+ - Makesure you have installation of php and composer
+ - open cmd or terminal 
+ - type "git clone https://github.com/kingrootid/larajagoan.git" or "git@github.com:kingrootid/larajagoan.git" (using SSH)
+ - type "cd /path/larajagoan"
+ - type "composer update"
+ - copy .env.example and renamed to .env for Linux / MacOs using terminal just type "cp .env.example .env"
+ - edit file .env in DB section use detail of your database
+ - back in terminal or cmd type "php artisan migrate"
+ - run it type "php artisan serve"
+ - to setup first account just go in browser and type localhost:8000/app/set_dummy 
+ - you can use this credential email : super.admin@example.com and password : password 
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
