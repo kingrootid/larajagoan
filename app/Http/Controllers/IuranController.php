@@ -32,4 +32,12 @@ class IuranController extends Controller
         ];
         return view('iuran.pengeluaran', $data);
     }
+    public function history()
+    {
+        $data = [
+            'page' => 'History Kas',
+            'user' => Auth::user(),
+        ];
+        return view('iuran.history', $data);
+    }
 }

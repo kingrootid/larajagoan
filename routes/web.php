@@ -27,8 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/iuran/warga', [IuranController::class, 'index']);
     Route::get('/iuran/pengeluaran', [IuranController::class, 'pengeluaran']);
     Route::get('/config/category', [ConfigController::class, 'category']);
+    Route::get('/iuran/history', [IuranController::class, 'history']);
 });
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
+    Route::get('history', [DataController::class, 'history']);
     Route::get('warga', [DataController::class, 'warga']);
     Route::get('warga/{id}', [DataController::class, 'getWarga']);
     Route::get('category', [DataController::class, 'category']);

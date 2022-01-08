@@ -10,22 +10,27 @@ use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DataController extends Controller
 {
     public function __construct()
     {
-        if (!request()->ajax()) {
-            exit('Not Allowed Direct access >.<');
-        }
+        // if (!request()->ajax()) {
+        //     exit('Not Allowed Direct access >.<');
+        // }
     }
     public function warga()
     {
-        return datatables()->of(Warga::all())->addIndexColumn()->addColumn('action', function ($row) {
-            $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
+        return datatables()->of(Warga::all())->addIndexColumn()->editColumn('ktp', function ($row) {
+            $image_url = asset('files') . '/ktp/' . $row['ktp'];
+            return "<img class='img-thumbnail' src='$image_url'>";
+        })->addColumn('action', function ($row) {
+            $actionBtn = "<a class='btn btn-icon waves-effect btn-info' href='javascript:;' onclick='detail(" . $row['id'] . ")'><i class='fa fa-search''></i></a> ";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
             $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
             return $actionBtn;
-        })->rawColumns(['action'])->make(true);
+        })->rawColumns(['action', 'ktp'])->make(true);
     }
     public function rumah()
     {
@@ -124,17 +129,19 @@ class DataController extends Controller
         $data = Pengeluaran::where('id', $id)->first();
         return $data;
     }
-    public function history()
+    public function history(Request $request)
     {
-        return datatables()->of(Kas::all())->addIndexColumn()->addColumn('action', function ($row) {
+        $now = date('m/Y');
+        if (!$request) {
+            $data = Kas::where('periode', $now)->get();
+        } else {
+            $periode = (empty($request['periode']) ? $now : $request['periode']);
+            $data = Kas::where('periode', $periode)->get();
+        }
+        return datatables()->of($data)->addColumn('action', function ($row) {
             $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
             $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
             return $actionBtn;
         })->rawColumns(['action', 'rumah_id'])->make(true);
-    }
-    public function getHistory($id)
-    {
-        $data = Kas::where('id', $id)->first();
-        return $data;
     }
 }

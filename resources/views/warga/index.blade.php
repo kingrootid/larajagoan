@@ -270,9 +270,92 @@
         </form>
     </div>
 </div>
+<div class="modal fade modalDetail" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h4" id="myLargeModalLabel">Detail Warga</h5>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="name" name="name" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="email" name="email" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Lahir</label>
+                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Alamat</label>
+                    <textarea class="form-control" id="alamat" name="alamat" disabled></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="jenis_kelamin" name="jenis_kelamin" value="L" disabled>
+                        <label class="form-check-label">
+                            Laki Laki
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="jenis_kelamin" name="jenis_kelamin" value="P" disabled>
+                        <label class="form-check-label">
+                            Perempuan
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status Perkawinan</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="status_perkawinan" name="status_perkawinan" value="Single" disabled>
+                        <label class="form-check-label">
+                            Single
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="status_perkawinan" name="status_perkawinan" value="Menikah" disabled>
+                        <label class="form-check-label">
+                            Menikah
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status Warga</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="status_warga" name="status_warga" value="Sudah Pindah" disabled>
+                        <label class="form-check-label">
+                            Sudah Pindah
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="status_warga" name="status_warga" value="Warga" disabled>
+                        <label class="form-check-label">
+                            Warga
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>KTP</label>
+                    <img id="ktp" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('js')
 <script>
+    $("#zoom").click(function() {
+        alert('asdasd');
+    })
     var token = '{{ csrf_token() }}'
     var table = $("#datatable").DataTable({
         processing: true,
@@ -459,6 +542,26 @@
                 $("input[id=hapus_jenis_kelamin][value='" + data.jenis_kelamin + "']").prop("checked", true);
                 $("input[id=hapus_status_perkawinan][value='" + data.status_perkawinan + "']").prop("checked", true);
                 $("input[id=hapus_status_warga][value='" + data.status_warga + "']").prop("checked", true);
+            }
+        })
+    }
+
+    function detail(id) {
+        $(".modalDetail").modal('show');
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "{{url('data/warga')}}/" + id,
+            success: function(data) {
+                $("#name").val(data.name);
+                $("#email").val(data.email);
+                $("#tanggal_lahir").val(data.tanggal_lahir);
+                $("#alamat").val(data.alamat);
+                $("input[id=jenis_kelamin][value='" + data.jenis_kelamin + "']").prop("checked", true);
+                $("input[id=status_perkawinan][value='" + data.status_perkawinan + "']").prop("checked", true);
+                $("input[id=status_warga][value='" + data.status_warga + "']").prop("checked", true);
+                var imgUrl = "{{asset('files/ktp')}}/" + data.ktp
+                $("#ktp").attr('src', imgUrl)
             }
         })
     }
