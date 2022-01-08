@@ -7,6 +7,7 @@ use App\Models\Iuran;
 use App\Models\Kas;
 use App\Models\Pengeluaran;
 use App\Models\Rumah;
+use App\Models\User;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -143,5 +144,18 @@ class DataController extends Controller
             $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
             return $actionBtn;
         })->rawColumns(['action', 'rumah_id'])->make(true);
+    }
+    public function admin()
+    {
+        return datatables()->of(User::all())->addIndexColumn()->addColumn('action', function ($row) {
+            $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
+            return $actionBtn;
+        })->rawColumns(['action'])->make(true);
+    }
+    public function getAdmin($id)
+    {
+        $data = User::where('id', $id)->first();
+        return $data;
     }
 }

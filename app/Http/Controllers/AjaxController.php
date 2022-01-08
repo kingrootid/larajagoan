@@ -7,9 +7,11 @@ use App\Models\Iuran;
 use App\Models\Kas;
 use App\Models\Pengeluaran;
 use App\Models\Rumah;
+use App\Models\User;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AjaxController extends Controller
 {
@@ -316,6 +318,48 @@ class AjaxController extends Controller
             } catch (\Exception $e) {
                 DB::rollback();
                 return ['error' => 1, 'message' => 'Gagal Edit pengeluaran', 'errorMessage' => $e];
+            }
+        } else {
+            return ['error' => 1, 'message' => 'Action Undefined'];
+        }
+    }
+    public function admin(Request $request)
+    {
+        if ($request['status'] == "add") {
+            $validateData = $this->validate($request, [
+                'name' => 'required|unique:users',
+                'email' => 'required|unique:users',
+                'role' => 'required',
+                'password' => 'required'
+            ]);
+            $validateData['password'] = Hash::make($validateData['password']);
+            if (User::create($validateData)) {
+                return ['error' => 0, 'message' => 'Berhasil Tambah User'];
+            } else {
+                return ['error' => 1, 'message' => 'Gagal Tambah User'];
+            }
+        } else if ($request['status'] == "edit") {
+            $getOld = User::where('id', $request['id'])->first();
+            $validateData = $this->validate($request, [
+                'name' => 'required',
+                'email' => 'required',
+                'role' => 'required',
+            ]);
+            if (empty($request['password'])) {
+                $validateData['password'] = $getOld->password;
+            } else {
+                $validateData['password'] = Hash::make($validateData['password']);
+            }
+            if (User::where('id', $request['id'])->update($validateData)) {
+                return ['error' => 0, 'message' => 'Berhasil Edit User'];
+            } else {
+                return ['error' => 1, 'message' => 'Gagal Edit User'];
+            }
+        } else if ($request['status'] == "hapus") {
+            if (User::where('id', $request['id'])->delete()) {
+                return ['error' => 0, 'message' => 'Berhasil Hapus User'];
+            } else {
+                return ['error' => 1, 'message' => 'Gagal Hapus User'];
             }
         } else {
             return ['error' => 1, 'message' => 'Action Undefined'];

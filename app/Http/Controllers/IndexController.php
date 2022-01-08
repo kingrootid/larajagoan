@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -10,11 +11,19 @@ class IndexController extends Controller
 {
     public function index()
     {
-        // $saldo = DB::table('kas')->select(["sum(CASE WHEN type = 'Pemasukan' THEN saldo ELSE 0 END) as pemasukan", "sum(CASE WHEN type = 'Pengeluaran' THEN saldo ELSE 0 END) as pengeluaran"])->first();
+        $saldo = array('pemasukan' => 0, 'pengeluaran' => 0);
+        $kas = Kas::all()->toArray();
+        foreach ($kas as $d) {
+            if ($d['type'] == "Pengeluaran") {
+                $saldo['pengeluaran'] = $saldo['pengeluaran'] + $d['saldo'];
+            } else {
+                $saldo['pemasukan'] = $saldo['pemasukan'] + $d['saldo'];
+            }
+        }
         $data = [
             'page' => 'Dashboard',
             'user' => Auth::user(),
-            // 'saldo' => $saldo
+            'kas' => $saldo
         ];
         return view('index', $data);
     }

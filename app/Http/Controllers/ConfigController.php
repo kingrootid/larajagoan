@@ -15,4 +15,12 @@ class ConfigController extends Controller
         ];
         return view('config.category', $data);
     }
+    public function admin()
+    {
+        $data = [
+            'page' => 'Management User',
+            'user' => Auth::user(),
+        ];
+        return view('config.user', $data);
+    }
 }

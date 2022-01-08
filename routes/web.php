@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/iuran/warga', [IuranController::class, 'index']);
     Route::get('/iuran/pengeluaran', [IuranController::class, 'pengeluaran']);
     Route::get('/config/category', [ConfigController::class, 'category']);
+    Route::get('/config/admin', [ConfigController::class, 'admin']);
     Route::get('/iuran/history', [IuranController::class, 'history']);
 });
 Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
@@ -35,6 +36,8 @@ Route::group(['prefix' => 'data', 'as' => 'data.'], function () {
     Route::get('warga/{id}', [DataController::class, 'getWarga']);
     Route::get('category', [DataController::class, 'category']);
     Route::get('category/{id}', [DataController::class, 'getCategory']);
+    Route::get('admin', [DataController::class, 'admin']);
+    Route::get('admin/{id}', [DataController::class, 'getAdmin']);
     Route::get('pengeluaran', [DataController::class, 'pengeluaran']);
     Route::get('pengeluaran/{id}', [DataController::class, 'getPengeluaran']);
     Route::get('rumah', [DataController::class, 'rumah']);
@@ -48,7 +51,10 @@ Route::group(['prefix' => 'ajax', 'as' => 'ajax.'], function () {
     Route::post('rumah', [AjaxController::class, 'rumah']);
     Route::post('category', [AjaxController::class, 'category']);
     Route::post('pengeluaran', [AjaxController::class, 'pengeluaran']);
+    Route::post('admin', [AjaxController::class, 'admin']);
     Route::post('iuran/warga', [AjaxController::class, 'iuran_warga']);
 });
 Route::post('login', [AuthController::class, 'authenticate']);
-Route::get('app/login', [AuthController::class, 'login'])->name('login');
+Route::get('app/login', [AuthController::class, 'login']);
+Route::get('app/set_dummy', [AuthController::class, 'dummySuperAdmin']);
+Route::get('app/logout', [AuthController::class, 'logout']);
