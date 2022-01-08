@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Rumah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,7 @@ class IuranController extends Controller
         $data = [
             'page' => 'Pengeluaran Kas Management',
             'user' => Auth::user(),
+            'category' => Category::all()
         ];
         return view('iuran.pengeluaran', $data);
     }

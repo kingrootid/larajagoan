@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Iuran;
+use App\Models\Kas;
+use App\Models\Pengeluaran;
 use App\Models\Rumah;
 use App\Models\Warga;
 use Illuminate\Http\Request;
@@ -90,6 +93,48 @@ class DataController extends Controller
     public function getiuran_warga($id)
     {
         $data = Iuran::where('id', $id)->first();
+        return $data;
+    }
+    public function category()
+    {
+        return datatables()->of(Category::all())->addIndexColumn()->addColumn('action', function ($row) {
+            $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
+            return $actionBtn;
+        })->rawColumns(['action', 'rumah_id'])->make(true);
+    }
+    public function getCategory($id)
+    {
+        $data = Category::where('id', $id)->first();
+        return $data;
+    }
+    public function pengeluaran()
+    {
+        return datatables()->of(Pengeluaran::all())->addIndexColumn()->editColumn('category', function ($row) {
+            $data = Category::where('id', $row['category'])->first();
+            return (empty($data)) ? 'Data sudah dihapus' : $data->name;
+        })->addColumn('action', function ($row) {
+            $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
+            return $actionBtn;
+        })->rawColumns(['action', 'rumah_id'])->make(true);
+    }
+    public function getPengeluaran($id)
+    {
+        $data = Pengeluaran::where('id', $id)->first();
+        return $data;
+    }
+    public function history()
+    {
+        return datatables()->of(Kas::all())->addIndexColumn()->addColumn('action', function ($row) {
+            $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
+            return $actionBtn;
+        })->rawColumns(['action', 'rumah_id'])->make(true);
+    }
+    public function getHistory($id)
+    {
+        $data = Kas::where('id', $id)->first();
         return $data;
     }
 }

@@ -18,6 +18,7 @@ class CreatePengeluaransTable extends Migration
             $table->bigInteger('category');
             $table->longText('deskripsi');
             $table->double('jumlah');
+            $table->string('periode');
             $table->timestamps();
         });
     }

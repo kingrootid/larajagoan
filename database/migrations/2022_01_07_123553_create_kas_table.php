@@ -18,6 +18,7 @@ class CreateKasTable extends Migration
             $table->enum('type', ['Pemasukan', 'Pengeluaran']);
             $table->longText('deskripsi');
             $table->double('saldo');
+            $table->string('periode');
             $table->timestamps();
         });
     }
