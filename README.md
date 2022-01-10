@@ -5,6 +5,7 @@
  - type "cd /path/larajagoan"
  - type "composer update"
  - copy .env.example and renamed to .env for Linux / MacOs using terminal just type "cp .env.example .env"
+ - and type "php artisan key:generate" in your terminal or cmd
  - edit file .env in DB section use detail of your database
  - back in terminal or cmd type "php artisan migrate"
  - run it type "php artisan serve"
